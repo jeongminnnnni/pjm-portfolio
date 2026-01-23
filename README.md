@@ -1,6 +1,6 @@
-# Interactive 3D Portfolio
+# 박정민's Interactive 3D Portfolio
 
-Next.js, React Three Fiber, GSAP를 활용하여 제작한 인터랙티브 3D 포트폴리오 사이트입니다.
+Next.js, React Three Fiber, GSAP를 활용하여 제작한 박정민의 인터랙티브 3D 포트폴리오 사이트입니다.
 WebGL 기반의 3D 그래픽과 부드러운 스크롤 애니메이션을 통해 사용자의 몰입감을 높이고, 프로젝트를 효과적으로 소개할 수 있도록 설계되었습니다.
 
 ## ✨ 주요 기능 (Key Features)
