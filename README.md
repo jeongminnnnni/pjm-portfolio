@@ -1,8 +1,26 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Interactive 3D Portfolio
 
-## Getting Started
+Next.js, React Three Fiber, GSAP를 활용하여 제작한 인터랙티브 3D 포트폴리오 사이트입니다.
+WebGL 기반의 3D 그래픽과 부드러운 스크롤 애니메이션을 통해 사용자의 몰입감을 높이고, 프로젝트를 효과적으로 소개할 수 있도록 설계되었습니다.
 
-First, run the development server:
+## ✨ 주요 기능 (Key Features)
+
+- **3D Particle Morphing**: 3D 파티클이 자연스럽게 변형되며 시각적인 즐거움을 제공합니다.
+- **Scrollytelling**: 스크롤에 따라 이야기가 전개되는 인터랙티브한 스토리텔링 방식을 채용했습니다.
+- **Responsive Design**: 다양한 디바이스 환경에 최적화된 반응형 디자인을 제공합니다.
+- **Project Showcase**: 모달 및 인터랙티브 요소를 통해 프로젝트 상세 정보를 직관적으로 전달합니다.
+
+## 🛠 기술 스택 (Tech Stack)
+
+- **Framework**: [Next.js 16](https://nextjs.org/)
+- **3D Graphics**: [React Three Fiber](https://docs.pmnd.rs/react-three-fiber), [Three.js](https://threejs.org/)
+- **Animation**: [GSAP](https://gsap.com/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Language**: TypeScript
+
+## 🚀 시작하기 (Getting Started)
+
+로컬 개발 환경에서 프로젝트를 실행하려면 다음 명령어를 사용하세요:
 
 ```bash
 npm run dev
@@ -14,23 +32,4 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+브라우저에서 [http://localhost:3000](http://localhost:3000)을 열어 결과를 확인하실 수 있습니다.

@@ -1,65 +1,176 @@
-import Image from "next/image";
+"use client";
+
+import React, { useRef, useEffect, useState } from "react";
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls } from "@react-three/drei";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import ParticleMorph from "./components/ParticleMorph";
+import ProjectModal from "./components/ProjectModal";
+
+// Register GSAP ScrollTrigger
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Home() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const scrollProgress = useRef(0); // This ref drives the 3D animation without re-renders
+  const [selectedProject, setSelectedProject] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const ctx = gsap.context(() => {
+      ScrollTrigger.create({
+        trigger: containerRef.current,
+        start: "top top",
+        end: "bottom bottom",
+        scrub: 1.5, // Smooth scrubbing
+        onUpdate: (self) => {
+          scrollProgress.current = self.progress * 4;
+        },
+      });
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <main className="relative w-full bg-black text-white selection:bg-white selection:text-black font-sans">
+      
+      {/* 3D Background Layer */}
+      <div className="fixed inset-0 z-0 cursor-move">
+        <Canvas
+          camera={{ position: [0, 0, 6], fov: 35 }}
+          gl={{ antialias: true, alpha: false }}
+          dpr={[1, 2]}
+        >
+          <color attach="background" args={["#000000"]} />
+          <OrbitControls 
+            enableZoom={false} 
+            enablePan={false} 
+            autoRotate={true}
+            autoRotateSpeed={0.5}
+            enableDamping={true}
+            dampingFactor={0.05}
+          />
+          <ParticleMorph scrollProgress={scrollProgress} />
+        </Canvas>
+      </div>
+
+      <ProjectModal 
+        projectId={selectedProject} 
+        onClose={() => setSelectedProject(null)} 
+      />
+
+      {/* Social Dock (Fixed Footer) */}
+      <footer className="fixed bottom-8 left-1/2 -translate-x-1/2 z-40 flex items-center gap-8 mix-blend-difference">
+        <a 
+          href="https://github.com/jeongminnnnni" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="text-sm font-light tracking-widest text-white/50 hover:text-white transition-all duration-300 relative group"
+        >
+          GITHUB
+          <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-white transition-all duration-300 group-hover:w-full"></span>
+        </a>
+        <div className="w-[1px] h-3 bg-white/20"></div>
+        <a 
+          href="https://www.youtube.com/@jeongminnnnnni" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="text-sm font-light tracking-widest text-white/50 hover:text-white transition-all duration-300 relative group"
+        >
+          YOUTUBE
+          <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-white transition-all duration-300 group-hover:w-full"></span>
+        </a>
+        <div className="w-[1px] h-3 bg-white/20"></div>
+        <a 
+          href="https://www.notion.so/2b561551fdde80bba01ef70538fc2c81?source=copy_link" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="text-sm font-light tracking-widest text-white/50 hover:text-white transition-all duration-300 relative group"
+        >
+          NOTION
+          <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-white transition-all duration-300 group-hover:w-full"></span>
+        </a>
+      </footer>
+
+      {/* Scrollable Content Layer */}
+      <div ref={containerRef} className="relative z-10 pointer-events-none">
+        
+        {/* Section 1: Hero */}
+        <section className="h-screen w-full relative flex flex-col justify-end p-12 md:p-24 border-b border-white/5">
+          <div className="max-w-2xl pointer-events-auto">
+            <h1 className="text-6xl md:text-8xl font-bold tracking-tighter mb-4 leading-[0.9]">
+              Creative<br />Developer
+            </h1>
+            <p className="text-sm md:text-base opacity-70 font-mono mt-10">
+              The Logic Sculptor | Creative Technologist Portfolio
+            </p>
+          </div>
+        </section>
+
+        {/* Section 2: Next Career */}
+        <section className="h-screen w-full relative flex flex-col justify-end p-12 md:p-24 border-b border-white/5">
+          <div className="max-w-2xl pointer-events-auto">
+            <h2 className="text-4xl md:text-6xl font-bold mb-2 tracking-tight">Next Career</h2>
+            <p className="text-xl md:text-2xl opacity-60 mb-8 font-light">AI Tech Pipeline Design</p>
+            <button 
+                onClick={() => setSelectedProject('nextcareer')}
+                className="group px-8 py-3 border border-white/30 hover:border-white hover:bg-white hover:text-black transition-all duration-300 text-xs tracking-widest uppercase flex items-center gap-2"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+                View Project
+                <span className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">→</span>
+            </button>
+          </div>
+        </section>
+
+        {/* Section 3: 둥지동지 */}
+        <section className="h-screen w-full relative flex flex-col justify-end p-12 md:p-24 border-b border-white/5">
+          <div className="max-w-2xl pointer-events-auto">
+            <h2 className="text-4xl md:text-6xl font-bold mb-2 tracking-tight">둥지동지</h2>
+            <p className="text-xl md:text-2xl opacity-60 mb-8 font-light">Service Stabilization</p>
+            <button 
+                onClick={() => setSelectedProject('dungji')}
+                className="group px-8 py-3 border border-white/30 hover:border-white hover:bg-white hover:text-black transition-all duration-300 text-xs tracking-widest uppercase flex items-center gap-2"
             >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+                View Project
+                <span className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">→</span>
+            </button>
+          </div>
+        </section>
+
+        {/* Section 4: DOQ */}
+        <section className="h-screen w-full relative flex flex-col justify-end p-12 md:p-24 border-b border-white/5">
+          <div className="max-w-2xl pointer-events-auto">
+            <h2 className="text-4xl md:text-6xl font-bold mb-2 tracking-tight">DOQ</h2>
+            <p className="text-xl md:text-2xl opacity-60 mb-8 font-light">Frontend Development</p>
+            <button 
+                onClick={() => setSelectedProject('doq')}
+                className="group px-8 py-3 border border-white/30 hover:border-white hover:bg-white hover:text-black transition-all duration-300 text-xs tracking-widest uppercase flex items-center gap-2"
+            >
+                View Project
+                <span className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">→</span>
+            </button>
+          </div>
+        </section>
+
+        {/* Section 5: 덤앤덤 */}
+        <section className="h-screen w-full relative flex flex-col justify-end p-12 md:p-24">
+          <div className="max-w-2xl pointer-events-auto">
+            <h2 className="text-4xl md:text-6xl font-bold mb-2 tracking-tight">덤앤덤</h2>
+            <p className="text-xl md:text-2xl opacity-60 mb-8 font-light">Product Management</p>
+            <button 
+                onClick={() => setSelectedProject('dumandum')}
+                className="group px-8 py-3 border border-white/30 hover:border-white hover:bg-white hover:text-black transition-all duration-300 text-xs tracking-widest uppercase flex items-center gap-2"
+            >
+                View Project
+                <span className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">→</span>
+            </button>
+          </div>
+        </section>
+
+      </div>
+    </main>
   );
 }
