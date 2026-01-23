@@ -135,6 +135,64 @@ const getMarkerShape = (count: number) => {
   return positions;
 };
 
+// Helper: Network Mesh Shape (Data Nodes with connections)
+const getNetworkShape = (count: number) => {
+  const positions = new Float32Array(count * 3);
+
+  // Create network nodes distributed in 3D space
+  const nodeCount = 12; // Major hub nodes
+  const nodes: { x: number; y: number; z: number }[] = [];
+
+  // Generate node positions spread out in 3D
+  for (let n = 0; n < nodeCount; n++) {
+    const theta = (n / nodeCount) * Math.PI * 2;
+    const phi = Math.acos(Math.random() * 2 - 1);
+    const r = 1.5 + Math.random() * 0.5;
+    nodes.push({
+      x: r * Math.sin(phi) * Math.cos(theta),
+      y: r * Math.sin(phi) * Math.sin(theta),
+      z: r * Math.cos(phi)
+    });
+  }
+
+  for (let i = 0; i < count; i++) {
+    let px, py, pz;
+    const rand = Math.random();
+
+    if (rand < 0.35) {
+      // Particles clustered around nodes (hub effect)
+      const nodeIdx = Math.floor(Math.random() * nodeCount);
+      const node = nodes[nodeIdx];
+      const spread = 0.25;
+      px = node.x + (Math.random() - 0.5) * spread;
+      py = node.y + (Math.random() - 0.5) * spread;
+      pz = node.z + (Math.random() - 0.5) * spread;
+    } else if (rand < 0.7) {
+      // Particles along edges (connections between nodes)
+      const nodeA = nodes[Math.floor(Math.random() * nodeCount)];
+      const nodeB = nodes[Math.floor(Math.random() * nodeCount)];
+      const t = Math.random();
+      const offset = 0.08;
+      px = nodeA.x + (nodeB.x - nodeA.x) * t + (Math.random() - 0.5) * offset;
+      py = nodeA.y + (nodeB.y - nodeA.y) * t + (Math.random() - 0.5) * offset;
+      pz = nodeA.z + (nodeB.z - nodeA.z) * t + (Math.random() - 0.5) * offset;
+    } else {
+      // Scattered ambient particles for "data flow" feel
+      const r = Math.pow(Math.random(), 0.5) * 2.0;
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(Math.random() * 2 - 1);
+      px = r * Math.sin(phi) * Math.cos(theta);
+      py = r * Math.sin(phi) * Math.sin(theta);
+      pz = r * Math.cos(phi);
+    }
+
+    positions[i * 3] = px;
+    positions[i * 3 + 1] = py;
+    positions[i * 3 + 2] = pz;
+  }
+  return positions;
+};
+
 
 interface ParticleMorphProps {
   scrollProgress: React.MutableRefObject<number>;
@@ -151,6 +209,7 @@ export default function ParticleMorph({ scrollProgress }: ParticleMorphProps) {
       getHouseShape(PARTICLE_COUNT),
       getDocumentShape(PARTICLE_COUNT),
       getMarkerShape(PARTICLE_COUNT),
+      getNetworkShape(PARTICLE_COUNT),
     ];
   }, []);
 
@@ -175,9 +234,19 @@ export default function ParticleMorph({ scrollProgress }: ParticleMorphProps) {
     const shapeA = shapes[previousShapeIndex];
     const shapeB = shapes[nextShapeIndex];
 
+    // Calculate breathing/pulse factor for network shape (index 5)
+    const isNearNetwork = safeIndex >= 4.5;
+    const networkInfluence = isNearNetwork ? Math.min((safeIndex - 4.5) * 2, 1) : 0;
+    const breathingScale = 1 + Math.sin(state.clock.elapsedTime * 1.2) * 0.04 * networkInfluence;
+
     for (let i = 0; i < PARTICLE_COUNT * 3; i++) {
       // Simple linear interpolation
       currentPositions[i] = THREE.MathUtils.lerp(shapeA[i], shapeB[i], progress);
+
+      // Apply breathing pulse effect for network shape
+      if (networkInfluence > 0) {
+        currentPositions[i] *= breathingScale;
+      }
 
       // Add a tiny bit of wave/breath motion
       if (i % 3 === 1) { // Y-axis

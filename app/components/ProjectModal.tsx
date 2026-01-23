@@ -43,7 +43,7 @@ const projectData: Record<string, ProjectData> = {
         사용자가 작성한 구인글을 AI가 분석하는 입력 페이지를 구현하고, 
         메인 페이지 UI 개선 및 렌더링 버그를 해결했습니다.`,
         contribution: 'Frontend Development & Service Stabilization',
-        techStack: ['Vue.js', 'Gemini API'],
+        techStack: ['Vue.js', 'Vuetify', 'Gemini API'],
         features: [
             '구인글 입력 페이지 로직 및 UI 구현',
             '메인 페이지 사용성 개선',
@@ -87,6 +87,24 @@ PM으로서 팀을 리드했습니다.`,
             'MVP 기능 우선순위 전략 주도',
             '기획-디자인-개발 커뮤니케이션 총괄',
             'BM/그로스 전략 및 AI 활용 구조 기획'
+        ],
+    },
+    deptwebsite: {
+        id: 'deptwebsite',
+        title: 'Dept. Website Renewal',
+        subtitle: '예술공학대학 웹사이트 리뉴얼',
+        description: `중앙대학교 예술공학대학 웹사이트 리뉴얼 프로젝트입니다.
+
+        사용자 경험을 개선하기 위해 메인페이지 UX/UI 전면 개편을 진행하고, 
+        학생회 DB 최신화, SW교육원 페이지 연동을 구현했습니다.
+        또한 지속적인 사용자 유입을 위한 리텐션 전략을 수립했습니다.`,
+        contribution: 'UX/UI Overhaul & Retention Strategy',
+        techStack: ['Next.js', 'Figma', 'DB Management'],
+        features: [
+            '메인페이지 UX/UI 디자인/개발',
+            '데이터베이스 최신화',
+            '사용자 리텐션 전략 수립',
+            'SW교육원 페이지 연동 구현'
         ],
     }
 };
