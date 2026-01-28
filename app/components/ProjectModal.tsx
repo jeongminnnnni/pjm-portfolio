@@ -41,13 +41,13 @@ const projectData: Record<string, ProjectData> = {
 
         라이프스타일 기반 기숙사 룸메이트 매칭 서비스입니다.
         사용자가 작성한 구인글을 AI가 분석하는 입력 페이지를 구현하고, 
-        메인 페이지 UI 개선 및 렌더링 버그를 해결했습니다.`,
+        메인 페이지 UI 개선 및 결과물 다운로드 버그를 해결했습니다.`,
         contribution: 'Frontend Development & Service Stabilization',
         techStack: ['Vue.js', 'Vuetify', 'Gemini API'],
         features: [
             '구인글 입력 페이지 로직 및 UI 구현',
             '메인 페이지 사용성 개선',
-            '결과 페이지 렌더링 버그 해결',
+            '결과 페이지 다운로드 버그 해결',
             '서비스 안정화 및 고도화'
         ],
 
