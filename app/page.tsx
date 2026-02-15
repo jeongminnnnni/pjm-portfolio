@@ -26,7 +26,7 @@ export default function Home() {
         end: "bottom bottom",
         scrub: 1.5, // Smooth scrubbing
         onUpdate: (self) => {
-          scrollProgress.current = self.progress * 5;
+          scrollProgress.current = self.progress * 6;
         },
       });
     }, containerRef);
@@ -38,7 +38,7 @@ export default function Home() {
     <main className="relative w-full bg-black text-white selection:bg-white selection:text-black font-sans">
 
       {/* 3D Background Layer */}
-      <div className="fixed inset-0 z-0 cursor-move">
+      <div className="fixed inset-0 z-0 pointer-events-none md:pointer-events-auto md:cursor-move">
         <Canvas
           camera={{ position: [0, 0, 6], fov: 35 }}
           gl={{ antialias: true, alpha: false }}
@@ -52,6 +52,7 @@ export default function Home() {
             autoRotateSpeed={0.5}
             enableDamping={true}
             dampingFactor={0.05}
+            touches={{ ONE: 0, TWO: 0 }}
           />
           <ParticleMorph scrollProgress={scrollProgress} />
         </Canvas>
@@ -102,10 +103,10 @@ export default function Home() {
         <section className="h-screen w-full relative flex flex-col justify-end p-12 md:p-24 border-b border-white/5">
           <div className="max-w-2xl pointer-events-auto">
             <h1 className="text-6xl md:text-8xl font-bold tracking-tighter mb-4 leading-[0.9]">
-              Creative<br />Developer
+              Product<br />Engineer
             </h1>
             <p className="text-sm md:text-base opacity-70 font-mono mt-10">
-              The Logic Sculptor | Creative Technologist Portfolio
+              Bridging Art, Technology, and Business
             </p>
           </div>
         </section>
@@ -171,12 +172,27 @@ export default function Home() {
         </section>
 
         {/* Section 6: Dept. Website Renewal */}
-        <section className="h-screen w-full relative flex flex-col justify-end p-12 md:p-24">
+        <section className="h-screen w-full relative flex flex-col justify-end p-12 md:p-24 border-b border-white/5">
           <div className="max-w-2xl pointer-events-auto">
             <h2 className="text-4xl md:text-6xl font-bold mb-2 tracking-tight">Dept. Website Renewal</h2>
             <p className="text-xl md:text-2xl opacity-60 mb-8 font-light">UX/UI Overhaul & Retention Strategy</p>
             <button
               onClick={() => setSelectedProject('deptwebsite')}
+              className="group px-8 py-3 border border-white/30 hover:border-white hover:bg-white hover:text-black transition-all duration-300 text-xs tracking-widest uppercase flex items-center gap-2"
+            >
+              View Project
+              <span className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">→</span>
+            </button>
+          </div>
+        </section>
+
+        {/* Section 7: Monetai */}
+        <section className="h-screen w-full relative flex flex-col justify-end p-12 md:p-24">
+          <div className="max-w-2xl pointer-events-auto">
+            <h2 className="text-4xl md:text-6xl font-bold mb-2 tracking-tight">Monetai</h2>
+            <p className="text-xl md:text-2xl opacity-60 mb-8 font-light">BD Campaign Planning & Execution</p>
+            <button
+              onClick={() => setSelectedProject('monetai')}
               className="group px-8 py-3 border border-white/30 hover:border-white hover:bg-white hover:text-black transition-all duration-300 text-xs tracking-widest uppercase flex items-center gap-2"
             >
               View Project

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo, useRef } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
 // Constants
@@ -193,6 +193,43 @@ const getNetworkShape = (count: number) => {
   return positions;
 };
 
+// Helper: Envelope / Letter Shape (✉️)
+const getEnvelopeShape = (count: number) => {
+  const positions = new Float32Array(count * 3);
+  for (let i = 0; i < count; i++) {
+    const z = (Math.random() - 0.5) * 0.3;
+    let px, py;
+    const rand = Math.random();
+
+    if (rand < 0.55) {
+      // Envelope body (rectangle)
+      px = (Math.random() - 0.5) * 3.2;
+      py = (Math.random() - 0.5) * 2.0 - 0.3;
+    } else if (rand < 0.90) {
+      // Envelope flap (V-shape / inverted triangle on top)
+      const r1 = Math.random();
+      const r2 = Math.random();
+      const sqrtR1 = Math.sqrt(r1);
+      // Triangle vertices: top-left, top-right, center-bottom (V tip)
+      const A = { x: -1.6, y: 0.7 };
+      const B = { x: 1.6, y: 0.7 };
+      const C = { x: 0, y: -0.3 };
+
+      px = (1 - sqrtR1) * C.x + (sqrtR1 * (1 - r2)) * A.x + (sqrtR1 * r2) * B.x;
+      py = (1 - sqrtR1) * C.y + (sqrtR1 * (1 - r2)) * A.y + (sqrtR1 * r2) * B.y;
+    } else {
+      // Letter paper peeking out from the top
+      px = (Math.random() - 0.5) * 2.4;
+      py = 0.7 + Math.random() * 1.2;
+    }
+
+    positions[i * 3] = px;
+    positions[i * 3 + 1] = py;
+    positions[i * 3 + 2] = z;
+  }
+  return positions;
+};
+
 
 interface ParticleMorphProps {
   scrollProgress: React.MutableRefObject<number>;
@@ -200,6 +237,8 @@ interface ParticleMorphProps {
 
 export default function ParticleMorph({ scrollProgress }: ParticleMorphProps) {
   const pointsRef = useRef<THREE.Points>(null);
+  const viewport = useThree((state) => state.viewport);
+  const scale = Math.min(viewport.width / 8, 0.75);
 
   // Memoize shapes to avoid recalculation
   const shapes = useMemo(() => {
@@ -210,6 +249,7 @@ export default function ParticleMorph({ scrollProgress }: ParticleMorphProps) {
       getDocumentShape(PARTICLE_COUNT),
       getMarkerShape(PARTICLE_COUNT),
       getNetworkShape(PARTICLE_COUNT),
+      getEnvelopeShape(PARTICLE_COUNT),
     ];
   }, []);
 
@@ -259,7 +299,7 @@ export default function ParticleMorph({ scrollProgress }: ParticleMorphProps) {
   });
 
   return (
-    <group scale={0.75}>
+    <group scale={scale}>
       <points ref={pointsRef}>
         <bufferGeometry>
           <bufferAttribute

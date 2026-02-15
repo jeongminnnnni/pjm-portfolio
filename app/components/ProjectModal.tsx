@@ -10,6 +10,7 @@ interface ProjectData {
     contribution: string;
     techStack: string[];
     features: string[];
+    detailUrl: string;
 }
 
 const projectData: Record<string, ProjectData> = {
@@ -31,7 +32,7 @@ const projectData: Record<string, ProjectData> = {
             '로고 디자인 및 브랜드 아이덴티티 구축',
             'Usecase 시연 영상 제작'
         ],
-
+        detailUrl: 'https://www.notion.so/2b561551fdde806b936bea21e4b9d76e?source=copy_link',
     },
     dungji: {
         id: 'dungji',
@@ -50,7 +51,7 @@ const projectData: Record<string, ProjectData> = {
             '결과 페이지 다운로드 버그 해결',
             '서비스 안정화 및 고도화'
         ],
-
+        detailUrl: 'https://www.notion.so/2b561551fdde80bdb85ce9c899d59546?source=copy_link',
     },
     doq: {
         id: 'doq',
@@ -68,7 +69,7 @@ Vue.js SPA 아키텍처를 설계하고, WebSocket 기반 실시간 분할 뷰�
             '애니메이션 스텝퍼 온보딩 프로세스',
             '전시 홍보 영상 기획 및 제작'
         ],
-
+        detailUrl: 'https://www.notion.so/DOQ-2ce61551fdde80679cadf1292810f977?source=copy_link',
     },
     dumandum: {
         id: 'dumandum',
@@ -88,6 +89,7 @@ PM으로서 팀을 리드했습니다.`,
             '기획-디자인-개발 커뮤니케이션 총괄',
             'BM/그로스 전략 및 AI 활용 구조 기획'
         ],
+        detailUrl: 'https://www.notion.so/2e561551fdde80a49922daae6b044d7f?source=copy_link',
     },
     deptwebsite: {
         id: 'deptwebsite',
@@ -106,6 +108,27 @@ PM으로서 팀을 리드했습니다.`,
             '사용자 리텐션 전략 수립',
             'SW교육원 페이지 연동 구현'
         ],
+        detailUrl: 'https://www.notion.so/2b561551fdde8047a374cbbba18d310d?source=copy_link',
+    },
+    monetai: {
+        id: 'monetai',
+        title: 'Monetai',
+        subtitle: 'AI SaaS 마케팅 솔루션 BD',
+        description: `AI SaaS 마케팅 툴 'Monetai'의 서포터즈로서 BD(사업 개발) 캠페인을 기획·실행했습니다.
+
+        결제 확률 기반 타겟팅 솔루션의 가치를 게임사에 전달하기 위해 
+        타겟 리서치, 콜드메일 카피라이팅, 소개 페이지 제작까지 
+        A–Z 풀사이클 캠페인을 수행하여 업계 평균 대비 3.7배 높은 CTR(20%)을 달성했습니다.`,
+        contribution: 'BD Campaign Planning & Execution',
+        techStack: ['Gen AI', 'Apollo.io', 'Google Antigravity', 'Gmass', 'Excel'],
+        features: [
+            '글로벌 캐주얼/방치형 게임사 5개사 타겟 발굴',
+            'Pain Point 기반 콜드메일 훅 전략 설계',
+            'Monetai 소개 페이지 기획 및 제작',
+            '오픈율 80%, 클릭률 20% (평균 대비 3.7배) 달성',
+            '타겟팅 정교화·하이퍼 퍼스널라이제이션 피봇 전략 수립'
+        ],
+        detailUrl: 'https://www.notion.so/AI-Monetai-BD-30261551fdde808c8012ee605068cc23?source=copy_link',
     }
 };
 
@@ -184,6 +207,19 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
                             </span>
                         ))}
                     </div>
+                </div>
+
+                {/* More Detail Button */}
+                <div className="pt-4 border-t border-white/10">
+                    <a
+                        href={project.detailUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group inline-flex items-center gap-2 px-8 py-3 bg-black text-white font-medium text-xs tracking-widest uppercase border border-white hover:bg-white hover:text-black transition-all duration-300"
+                    >
+                        More Detail
+                        <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
+                    </a>
                 </div>
             </div>
         </div>

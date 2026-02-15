@@ -15,13 +15,13 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "The Logic Sculptor | Creative Technologist Portfolio",
-  description: "예술공학을 전공한 프롬프트 엔지니어 + AI 서비스 개발자의 포트폴리오. 나의 코드는 예술이 되고, 나의 기획은 구조가 된다.",
-  keywords: ["포트폴리오", "프롬프트 엔지니어", "AI 개발", "예술공학", "Creative Technologist"],
+  title: "Product Engineer | Bridging Art, Technology, and Business",
+  description: "예술적 감각과 기술적 전문성으로 비즈니스의 문제를 해결하는 Product Engineer.",
+  keywords: ["AI 서비스 기획", "웹 개발", "디자인", "UX 전략", "마케팅"],
   authors: [{ name: "Portfolio Owner" }],
   openGraph: {
-    title: "The Logic Sculptor | Creative Technologist Portfolio",
-    description: "나의 코드는 예술이 되고, 나의 기획은 구조가 된다.",
+    title: "Product Engineer | Bridging Art, Technology, and Business",
+    description: "예술적 감각과 기술적 전문성으로 비즈니스의 문제를 해결하는 Product Engineer.",
     type: "website",
   },
 };
