@@ -230,6 +230,53 @@ const getEnvelopeShape = (count: number) => {
   return positions;
 };
 
+// Helper: Barcode Shape (|||||| pattern)
+const getBarcodeShape = (count: number) => {
+  const positions = new Float32Array(count * 3);
+
+  // Define barcode bars — alternating thick and thin bars with gaps
+  const bars: { x: number; width: number }[] = [];
+  const barPattern = [
+    0.8, 0.3, 0.5, 0.3, 0.9, 0.3, 0.4, 0.3, 0.7, 0.3,
+    0.6, 0.3, 0.8, 0.3, 0.5
+  ]; // widths: thick bars alternate with thin gaps
+  let cursor = -2.2; // Start from left
+  for (let b = 0; b < barPattern.length; b++) {
+    if (b % 2 === 0) {
+      // Bar
+      bars.push({ x: cursor + barPattern[b] / 2, width: barPattern[b] });
+    }
+    cursor += barPattern[b] * 0.58; // Spacing factor
+  }
+
+  const barHeight = 3.2;
+
+  for (let i = 0; i < count; i++) {
+    const z = (Math.random() - 0.5) * 0.25;
+
+    // Pick a random bar, weighted by width (thicker bars get more particles)
+    const totalWidth = bars.reduce((sum, bar) => sum + bar.width, 0);
+    let r = Math.random() * totalWidth;
+    let selectedBar = bars[0];
+    for (const bar of bars) {
+      r -= bar.width;
+      if (r <= 0) {
+        selectedBar = bar;
+        break;
+      }
+    }
+
+    // Distribute particle within the selected bar
+    const px = selectedBar.x + (Math.random() - 0.5) * selectedBar.width * 0.18;
+    const py = (Math.random() - 0.5) * barHeight;
+
+    positions[i * 3] = px;
+    positions[i * 3 + 1] = py;
+    positions[i * 3 + 2] = z;
+  }
+  return positions;
+};
+
 
 interface ParticleMorphProps {
   scrollProgress: React.MutableRefObject<number>;
@@ -250,6 +297,7 @@ export default function ParticleMorph({ scrollProgress }: ParticleMorphProps) {
       getMarkerShape(PARTICLE_COUNT),
       getNetworkShape(PARTICLE_COUNT),
       getEnvelopeShape(PARTICLE_COUNT),
+      getBarcodeShape(PARTICLE_COUNT),
     ];
   }, []);
 

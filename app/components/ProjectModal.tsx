@@ -129,6 +129,22 @@ PM으로서 팀을 리드했습니다.`,
             '타겟팅 정교화·하이퍼 퍼스널라이제이션 피봇 전략 수립'
         ],
         detailUrl: 'https://www.notion.so/AI-Monetai-BD-30261551fdde808c8012ee605068cc23?source=copy_link',
+    },
+    barkit: {
+        id: 'barkit',
+        title: 'BarKit',
+        subtitle: '지도형 통합 멤버십 지갑 서비스',
+        description: `Barcode + Kit!\n\n여러 멤버십·포인트 바코드를 한곳에 모아 매장별로 자동 매칭·즉시 제시할 수 있는 지도형 통합 멤버십 지갑 서비스입니다.\n\n BarKit의 서비스 철학은 다음과 같습니다.\n\n🔥 귀찮음을 줄이는 것: 모든 멤버십 바코드를 한 곳에 모아 손쉽게 제시\n🔥 모름을 없애는 것: 지도 기반 매장 탐색으로 주변 멤버십 혜택을 확인`,
+        contribution: 'Frontend Lead & Core Feature Development',
+        techStack: ['React 19', 'TypeScript', 'Vite', 'Zustand', 'React Query', 'Google Maps API', 'react-barcode', 'zxing-wasm', 'Tailwind CSS v4', 'PWA'],
+        features: [
+            'Vite + React 19 + TypeScript 초기 세팅 및 아키텍처 설계',
+            '로그인/OAuth 인증 파이프라인 전면 구현',
+            '바코드/QR 생성 및 카메라 기반 스캐닝 개발',
+            'Google Maps API 연동 매장 정보·지도 핀 구현',
+            '모바일 최적화 UI/UX 폴리싱 및 마이크로 인터랙션'
+        ],
+        detailUrl: 'https://www.notion.so/BarKit-31161551fdde80f0be57d3925a5c9502?source=copy_link',
     }
 };
 

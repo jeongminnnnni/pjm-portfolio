@@ -26,7 +26,7 @@ export default function Home() {
         end: "bottom bottom",
         scrub: 1.5, // Smooth scrubbing
         onUpdate: (self) => {
-          scrollProgress.current = self.progress * 6;
+          scrollProgress.current = self.progress * 7;
         },
       });
     }, containerRef);
@@ -38,7 +38,7 @@ export default function Home() {
     <main className="relative w-full bg-black text-white selection:bg-white selection:text-black font-sans">
 
       {/* 3D Background Layer */}
-      <div className="fixed inset-0 z-0 pointer-events-none md:pointer-events-auto md:cursor-move">
+      <div className="fixed inset-0 z-0 pointer-events-none md:pointer-events-auto md:cursor-move" style={{ touchAction: 'pan-y' }}>
         <Canvas
           camera={{ position: [0, 0, 6], fov: 35 }}
           gl={{ antialias: true, alpha: false }}
@@ -52,7 +52,7 @@ export default function Home() {
             autoRotateSpeed={0.5}
             enableDamping={true}
             dampingFactor={0.05}
-            touches={{ ONE: 0, TWO: 0 }}
+            enableRotate={typeof window !== 'undefined' && window.innerWidth >= 768}
           />
           <ParticleMorph scrollProgress={scrollProgress} />
         </Canvas>
@@ -112,7 +112,7 @@ export default function Home() {
         </section>
 
         {/* Section 2: Next Career */}
-        <section className="h-screen w-full relative flex flex-col justify-end p-12 md:p-24 border-b border-white/5">
+        <section className="h-screen w-full relative flex flex-col justify-end p-12 pb-28 md:p-24 border-b border-white/5">
           <div className="max-w-2xl pointer-events-auto">
             <h2 className="text-4xl md:text-6xl font-bold mb-2 tracking-tight">Next Career</h2>
             <p className="text-xl md:text-2xl opacity-60 mb-8 font-light">AI Tech Pipeline Design</p>
@@ -127,7 +127,7 @@ export default function Home() {
         </section>
 
         {/* Section 3: 둥지동지 */}
-        <section className="h-screen w-full relative flex flex-col justify-end p-12 md:p-24 border-b border-white/5">
+        <section className="h-screen w-full relative flex flex-col justify-end p-12 pb-28 md:p-24 border-b border-white/5">
           <div className="max-w-2xl pointer-events-auto">
             <h2 className="text-4xl md:text-6xl font-bold mb-2 tracking-tight">둥지동지</h2>
             <p className="text-xl md:text-2xl opacity-60 mb-8 font-light">Service Stabilization</p>
@@ -142,7 +142,7 @@ export default function Home() {
         </section>
 
         {/* Section 4: DOQ */}
-        <section className="h-screen w-full relative flex flex-col justify-end p-12 md:p-24 border-b border-white/5">
+        <section className="h-screen w-full relative flex flex-col justify-end p-12 pb-28 md:p-24 border-b border-white/5">
           <div className="max-w-2xl pointer-events-auto">
             <h2 className="text-4xl md:text-6xl font-bold mb-2 tracking-tight">DOQ</h2>
             <p className="text-xl md:text-2xl opacity-60 mb-8 font-light">Frontend Development</p>
@@ -157,7 +157,7 @@ export default function Home() {
         </section>
 
         {/* Section 5: 덤앤덤 */}
-        <section className="h-screen w-full relative flex flex-col justify-end p-12 md:p-24 border-b border-white/5">
+        <section className="h-screen w-full relative flex flex-col justify-end p-12 pb-28 md:p-24 border-b border-white/5">
           <div className="max-w-2xl pointer-events-auto">
             <h2 className="text-4xl md:text-6xl font-bold mb-2 tracking-tight">덤앤덤</h2>
             <p className="text-xl md:text-2xl opacity-60 mb-8 font-light">Product Management</p>
@@ -172,7 +172,7 @@ export default function Home() {
         </section>
 
         {/* Section 6: Dept. Website Renewal */}
-        <section className="h-screen w-full relative flex flex-col justify-end p-12 md:p-24 border-b border-white/5">
+        <section className="h-screen w-full relative flex flex-col justify-end p-12 pb-28 md:p-24 border-b border-white/5">
           <div className="max-w-2xl pointer-events-auto">
             <h2 className="text-4xl md:text-6xl font-bold mb-2 tracking-tight">Dept. Website Renewal</h2>
             <p className="text-xl md:text-2xl opacity-60 mb-8 font-light">UX/UI Overhaul & Retention Strategy</p>
@@ -187,12 +187,27 @@ export default function Home() {
         </section>
 
         {/* Section 7: Monetai */}
-        <section className="h-screen w-full relative flex flex-col justify-end p-12 md:p-24">
+        <section className="h-screen w-full relative flex flex-col justify-end p-12 pb-28 md:p-24 border-b border-white/5">
           <div className="max-w-2xl pointer-events-auto">
             <h2 className="text-4xl md:text-6xl font-bold mb-2 tracking-tight">Monetai</h2>
             <p className="text-xl md:text-2xl opacity-60 mb-8 font-light">BD Campaign Planning & Execution</p>
             <button
               onClick={() => setSelectedProject('monetai')}
+              className="group px-8 py-3 border border-white/30 hover:border-white hover:bg-white hover:text-black transition-all duration-300 text-xs tracking-widest uppercase flex items-center gap-2"
+            >
+              View Project
+              <span className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">→</span>
+            </button>
+          </div>
+        </section>
+
+        {/* Section 8: BarKit */}
+        <section className="h-screen w-full relative flex flex-col justify-end p-12 pb-28 md:p-24">
+          <div className="max-w-2xl pointer-events-auto">
+            <h2 className="text-4xl md:text-6xl font-bold mb-2 tracking-tight">BarKit</h2>
+            <p className="text-xl md:text-2xl opacity-60 mb-8 font-light">Frontend Lead & Core Feature Development</p>
+            <button
+              onClick={() => setSelectedProject('barkit')}
               className="group px-8 py-3 border border-white/30 hover:border-white hover:bg-white hover:text-black transition-all duration-300 text-xs tracking-widest uppercase flex items-center gap-2"
             >
               View Project
