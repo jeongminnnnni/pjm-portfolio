@@ -1,41 +1,61 @@
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { motion } from "framer-motion";
 import ParticleMorph from "./components/ParticleMorph";
 import ProjectModal from "./components/ProjectModal";
+import CategoryCard from "./components/CategoryCard";
+import ProjectCard from "./components/ProjectCard";
+import SocialDock from "./components/SocialDock";
 
-// Register GSAP ScrollTrigger
-gsap.registerPlugin(ScrollTrigger);
+type Category = "business" | "product";
+
+interface ProjectItem {
+  id: string;
+  title: string;
+  subtitle: string;
+}
+
+const categories: Record<Category, ProjectItem[]> = {
+  business: [
+    { id: "nextcareer", title: "Next Career", subtitle: "AI Tech Pipeline Design" },
+    { id: "dumandum", title: "덤앤덤", subtitle: "Product Management" },
+    { id: "monetai", title: "Monetai", subtitle: "BD Campaign Planning & Execution" },
+  ],
+  product: [
+    { id: "dungji", title: "둥지동지", subtitle: "Service Stabilization" },
+    { id: "doq", title: "DOQ", subtitle: "Frontend Development" },
+    { id: "deptwebsite", title: "Dept. Website Renewal", subtitle: "UX/UI Overhaul & Retention Strategy" },
+    { id: "barkit", title: "BarKit", subtitle: "Frontend Lead & Core Feature Development" },
+  ],
+};
+
+const categoryDescriptions: Record<Category, string> = {
+  business: "기획 · BD · 마케팅 프로젝트",
+  product: "개발 · 디자인 · 엔지니어링 프로젝트",
+};
+
+// Map category to particle shape index: 0=Galaxy(hero), 1=Dollar(biz), 2=Document(product)
+const shapeIndexMap: Record<Category, number> = {
+  business: 1,
+  product: 2,
+};
 
 export default function Home() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const scrollProgress = useRef(0); // This ref drives the 3D animation without re-renders
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {
-    if (!containerRef.current) return;
-
-    const ctx = gsap.context(() => {
-      ScrollTrigger.create({
-        trigger: containerRef.current,
-        start: "top top",
-        end: "bottom bottom",
-        scrub: 1.5, // Smooth scrubbing
-        onUpdate: (self) => {
-          scrollProgress.current = self.progress * 7;
-        },
-      });
-    }, containerRef);
-
-    return () => ctx.revert();
+    setIsDesktop(window.innerWidth >= 768);
   }, []);
 
+  const targetShapeIndex = selectedCategory ? shapeIndexMap[selectedCategory] : 0;
+
   return (
-    <main className="relative w-full bg-black text-white selection:bg-white selection:text-black font-sans">
+    <main className="relative w-full min-h-screen bg-black text-white selection:bg-white selection:text-black font-sans">
 
       {/* 3D Background Layer */}
       <div className="fixed inset-0 z-0 pointer-events-none md:pointer-events-auto md:cursor-move" style={{ touchAction: 'pan-y' }}>
@@ -52,9 +72,9 @@ export default function Home() {
             autoRotateSpeed={0.5}
             enableDamping={true}
             dampingFactor={0.05}
-            enableRotate={typeof window !== 'undefined' && window.innerWidth >= 768}
+            enableRotate={isDesktop}
           />
-          <ParticleMorph scrollProgress={scrollProgress} />
+          <ParticleMorph targetShapeIndex={targetShapeIndex} />
         </Canvas>
       </div>
 
@@ -63,45 +83,14 @@ export default function Home() {
         onClose={() => setSelectedProject(null)}
       />
 
-      {/* Social Dock (Fixed Footer) */}
-      <footer className="fixed bottom-8 left-1/2 -translate-x-1/2 z-40 flex items-center gap-8 mix-blend-difference">
-        <a
-          href="https://github.com/jeongminnnnni"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-sm font-light tracking-widest text-white/50 hover:text-white transition-all duration-300 relative group"
-        >
-          GITHUB
-          <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-white transition-all duration-300 group-hover:w-full"></span>
-        </a>
-        <div className="w-[1px] h-3 bg-white/20"></div>
-        <a
-          href="https://www.youtube.com/@jeongminnnnnni"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-sm font-light tracking-widest text-white/50 hover:text-white transition-all duration-300 relative group"
-        >
-          YOUTUBE
-          <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-white transition-all duration-300 group-hover:w-full"></span>
-        </a>
-        <div className="w-[1px] h-3 bg-white/20"></div>
-        <a
-          href="https://www.notion.so/2b561551fdde80bba01ef70538fc2c81?source=copy_link"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-sm font-light tracking-widest text-white/50 hover:text-white transition-all duration-300 relative group"
-        >
-          NOTION
-          <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-white transition-all duration-300 group-hover:w-full"></span>
-        </a>
-      </footer>
+      <SocialDock />
 
-      {/* Scrollable Content Layer */}
-      <div ref={containerRef} className="relative z-10 pointer-events-none">
+      {/* Content Layer */}
+      <div className="relative z-10">
 
-        {/* Section 1: Hero */}
+        {/* Hero */}
         <section className="h-screen w-full relative flex flex-col justify-end p-12 md:p-24 border-b border-white/5">
-          <div className="max-w-2xl pointer-events-auto">
+          <div className="max-w-2xl">
             <h1 className="text-6xl md:text-8xl font-bold tracking-tighter mb-4 leading-[0.9]">
               Product<br />Engineer
             </h1>
@@ -111,108 +100,75 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Section 2: Next Career */}
-        <section className="h-screen w-full relative flex flex-col justify-end p-12 pb-28 md:p-24 border-b border-white/5">
-          <div className="max-w-2xl pointer-events-auto">
-            <h2 className="text-4xl md:text-6xl font-bold mb-2 tracking-tight">Next Career</h2>
-            <p className="text-xl md:text-2xl opacity-60 mb-8 font-light">AI Tech Pipeline Design</p>
-            <button
-              onClick={() => setSelectedProject('nextcareer')}
-              className="group px-8 py-3 border border-white/30 hover:border-white hover:bg-white hover:text-black transition-all duration-300 text-xs tracking-widest uppercase flex items-center gap-2"
-            >
-              View Project
-              <span className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">→</span>
-            </button>
-          </div>
-        </section>
+        {/* Projects Section */}
+        <section className="min-h-screen w-full px-8 md:px-24 py-20 md:py-32">
 
-        {/* Section 3: 둥지동지 */}
-        <section className="h-screen w-full relative flex flex-col justify-end p-12 pb-28 md:p-24 border-b border-white/5">
-          <div className="max-w-2xl pointer-events-auto">
-            <h2 className="text-4xl md:text-6xl font-bold mb-2 tracking-tight">둥지동지</h2>
-            <p className="text-xl md:text-2xl opacity-60 mb-8 font-light">Service Stabilization</p>
-            <button
-              onClick={() => setSelectedProject('dungji')}
-              className="group px-8 py-3 border border-white/30 hover:border-white hover:bg-white hover:text-black transition-all duration-300 text-xs tracking-widest uppercase flex items-center gap-2"
+          {/* Section Header */}
+          <div className="max-w-5xl mx-auto mb-16">
+            <motion.h2
+              className="text-4xl md:text-6xl font-bold tracking-tight mb-20"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.5 }}
+              transition={{ duration: 0.7, ease: "easeOut" }}
             >
-              View Project
-              <span className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">→</span>
-            </button>
+              Projects
+            </motion.h2>
           </div>
-        </section>
 
-        {/* Section 4: DOQ */}
-        <section className="h-screen w-full relative flex flex-col justify-end p-12 pb-28 md:p-24 border-b border-white/5">
-          <div className="max-w-2xl pointer-events-auto">
-            <h2 className="text-4xl md:text-6xl font-bold mb-2 tracking-tight">DOQ</h2>
-            <p className="text-xl md:text-2xl opacity-60 mb-8 font-light">Frontend Development</p>
-            <button
-              onClick={() => setSelectedProject('doq')}
-              className="group px-8 py-3 border border-white/30 hover:border-white hover:bg-white hover:text-black transition-all duration-300 text-xs tracking-widest uppercase flex items-center gap-2"
-            >
-              View Project
-              <span className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">→</span>
-            </button>
-          </div>
-        </section>
+          {/* Category Cards or Project Cards */}
+          <div className="max-w-5xl mx-auto">
+            {selectedCategory === null ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                {(["business", "product"] as Category[]).map((cat, index) => (
+                  <CategoryCard
+                    key={cat}
+                    category={cat}
+                    description={categoryDescriptions[cat]}
+                    projectCount={categories[cat].length}
+                    index={index}
+                    onClick={() => setSelectedCategory(cat)}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div>
+                {/* Back Button */}
+                <motion.button
+                  onClick={() => setSelectedCategory(null)}
+                  className="flex items-center gap-2 text-sm text-white/50 hover:text-white transition-colors duration-300 mb-10 group"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.4 }}
+                >
+                  <span className="group-hover:-translate-x-1 transition-transform duration-300">←</span>
+                  <span className="tracking-widest uppercase text-xs">Back</span>
+                </motion.button>
 
-        {/* Section 5: 덤앤덤 */}
-        <section className="h-screen w-full relative flex flex-col justify-end p-12 pb-28 md:p-24 border-b border-white/5">
-          <div className="max-w-2xl pointer-events-auto">
-            <h2 className="text-4xl md:text-6xl font-bold mb-2 tracking-tight">덤앤덤</h2>
-            <p className="text-xl md:text-2xl opacity-60 mb-8 font-light">Product Management</p>
-            <button
-              onClick={() => setSelectedProject('dumandum')}
-              className="group px-8 py-3 border border-white/30 hover:border-white hover:bg-white hover:text-black transition-all duration-300 text-xs tracking-widest uppercase flex items-center gap-2"
-            >
-              View Project
-              <span className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">→</span>
-            </button>
-          </div>
-        </section>
+                {/* Category Title */}
+                <motion.h3
+                  className="text-2xl md:text-3xl font-bold tracking-tight mb-8 capitalize"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  {selectedCategory}
+                </motion.h3>
 
-        {/* Section 6: Dept. Website Renewal */}
-        <section className="h-screen w-full relative flex flex-col justify-end p-12 pb-28 md:p-24 border-b border-white/5">
-          <div className="max-w-2xl pointer-events-auto">
-            <h2 className="text-4xl md:text-6xl font-bold mb-2 tracking-tight">Dept. Website Renewal</h2>
-            <p className="text-xl md:text-2xl opacity-60 mb-8 font-light">UX/UI Overhaul & Retention Strategy</p>
-            <button
-              onClick={() => setSelectedProject('deptwebsite')}
-              className="group px-8 py-3 border border-white/30 hover:border-white hover:bg-white hover:text-black transition-all duration-300 text-xs tracking-widest uppercase flex items-center gap-2"
-            >
-              View Project
-              <span className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">→</span>
-            </button>
-          </div>
-        </section>
-
-        {/* Section 7: Monetai */}
-        <section className="h-screen w-full relative flex flex-col justify-end p-12 pb-28 md:p-24 border-b border-white/5">
-          <div className="max-w-2xl pointer-events-auto">
-            <h2 className="text-4xl md:text-6xl font-bold mb-2 tracking-tight">Monetai</h2>
-            <p className="text-xl md:text-2xl opacity-60 mb-8 font-light">BD Campaign Planning & Execution</p>
-            <button
-              onClick={() => setSelectedProject('monetai')}
-              className="group px-8 py-3 border border-white/30 hover:border-white hover:bg-white hover:text-black transition-all duration-300 text-xs tracking-widest uppercase flex items-center gap-2"
-            >
-              View Project
-              <span className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">→</span>
-            </button>
-          </div>
-        </section>
-
-        {/* Section 8: BarKit */}
-        <section className="h-screen w-full relative flex flex-col justify-end p-12 pb-28 md:p-24">
-          <div className="max-w-2xl pointer-events-auto">
-            <h2 className="text-4xl md:text-6xl font-bold mb-2 tracking-tight">BarKit</h2>
-            <p className="text-xl md:text-2xl opacity-60 mb-8 font-light">Frontend Lead & Core Feature Development</p>
-            <button
-              onClick={() => setSelectedProject('barkit')}
-              className="group px-8 py-3 border border-white/30 hover:border-white hover:bg-white hover:text-black transition-all duration-300 text-xs tracking-widest uppercase flex items-center gap-2"
-            >
-              View Project
-              <span className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">→</span>
-            </button>
+                {/* Cards Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {categories[selectedCategory].map((project, index) => (
+                    <ProjectCard
+                      key={project.id}
+                      title={project.title}
+                      subtitle={project.subtitle}
+                      index={index}
+                      onClick={() => setSelectedProject(project.id)}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </section>
 
